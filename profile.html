@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Профиль - Feliz Wine Bar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Montserrat', sans-serif; background-color: #111827; color: #f3f4f6; }
+        .status-Новый { background-color: #3b82f6; }
+        .status-Одобрен { background-color: #22c55e; }
+        .status-Отменен { background-color: #ef4444; }
+        .status-Доставлен { background-color: #6b7280; }
+    </style>
+</head>
+<body class="bg-gray-900">
+<header class="bg-gray-800 shadow-lg">
+    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+        <a href="/" class="text-2xl font-bold text-white">Feliz Wine Bar</a>
+        <div>
+            <a href="/menu" class="text-gray-300 hover:text-white font-semibold transition-colors mr-6">Меню</a>
+            <button onclick="logout()" class="text-gray-300 hover:text-white font-semibold transition-colors">Выйти</button>
+        </div>
+    </div>
+</header>
+
+<main class="container mx-auto p-6">
+    <h1 class="text-4xl font-bold mb-8">Мой профиль</h1>
+    <div class="bg-gray-800 p-6 rounded-lg shadow-xl mb-8">
+        <h2 class="text-2xl font-semibold mb-4">Личные данные</h2>
+        <p><strong>Имя:</strong> {{ user_info.name }}</p>
+        <p><strong>Email:</strong> {{ user_info.email }}</p>
+        <p><strong>Телефон:</strong> {{ user_info.phone }}</p>
+    </div>
+
+    <div class="bg-gray-800 p-6 rounded-lg shadow-xl">
+        <h2 class="text-2xl font-semibold mb-4">История заказов</h2>
+        <div class="space-y-4">
+            {% for order in orders %}
+            <div class="bg-gray-700 p-4 rounded-lg">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="font-bold">Заказ #{{ order.id }} от {{ order.created_at.split(' ')[0] }}</span>
+                    <span class="px-2 py-1 text-xs font-bold rounded-full status-{{ order.status }}">{{ order.status }}</span>
+                </div>
+                <p class="text-sm"><strong>Адрес:</strong> {{ order.customer_address }}</p>
+                <ul class="list-disc list-inside text-sm mt-2">
+                    {% for item in order.order_details %}
+                    <li>{{ item.name }} x {{ item.quantity }}</li>
+                    {% endfor %}
+                </ul>
+                <p class="text-right font-bold mt-2">Итого: {{ order.total_price }} MDL</p>
+            </div>
+            {% else %}
+            <p class="text-gray-400">У вас еще нет заказов.</p>
+            {% endfor %}
+        </div>
+    </div>
+</main>
+<script>
+    async function logout() {
+        await fetch('/api/logout', { method: 'POST' });
+        window.location.href = '/';
+    }
+</script>
+</body>
+</html>

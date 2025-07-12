@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feliz Wine Bar | Ресторан вина и морепродуктов</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Translations -->
+    <script src="/static/js/translations.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #121212;
+            color: #E0E0E0;
+        }
+        h1, h2, h3, .font-serif {
+            font-family: 'Playfair Display', serif;
+        }
+        .accent-gold { color: #D4AF37; }
+        .bg-accent-gold { background-color: #D4AF37; }
+        .border-accent-gold { border-color: #D4AF37; }
+        
+        /* Hero Section Styles */
+        .hero-section {
+            position: relative;
+            height: 100vh;
+            min-height: 600px;
+            overflow: hidden;
+        }
+        
+        #hero-video-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+        
+        .hero-video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+        }
+        
+        /* Mobile Video Styles */
+        @media (max-width: 767px) {
+            .hero-video {
+                width: 100%;
+                height: auto;
+            }
+        }
+        
+        /* Desktop Video Styles */
+        @media (min-width: 768px) {
+            .hero-video {
+                width: auto;
+                height: 100%;
+            }
+        }
+        
+        /* Fallback background for when video fails to load */
+        .hero-video-fallback {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #1a1a1a;
+            z-index: -2;
+        }
+        
+        /* Language switcher */
+        .language-switcher {
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+        .language-switcher:hover {
+            opacity: 1;
+        }
+        .language-switcher.active {
+            opacity: 1;
+            font-weight: bold;
+            color: #D4AF37;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- === Модальное окно для бронирования === -->
+    <div id="booking-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden">
+        <div class="bg-[#1a1a1a] rounded-lg p-8 w-full max-w-md relative text-center shadow-2xl mx-4">
+            <button id="close-booking-modal" class="absolute top-3 right-4 text-gray-400 hover:text-white text-3xl">&times;</button>
+            <h3 class="text-2xl font-serif mb-4 text-white" data-translate="booking_title">Бронь стола</h3>
+            <p class="text-gray-300 mb-2" data-translate="booking_text">Бронь стола возможна по номеру телефона:</p>
+            <p class="text-accent-gold text-2xl my-4 font-bold tracking-wider" data-translate="phone">+373 123 456 78</p>
+            <p class="text-sm text-gray-500" data-translate="booking_note">(Пожалуйста, свяжитесь с нами для уточнения деталей)</p>
+        </div>
+    </div>
+
+    <!-- === HEADER === -->
+    <header class="fixed top-0 left-0 w-full bg-black bg-opacity-50 backdrop-blur-sm z-40 transition-all duration-300">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="/" class="text-2xl font-serif font-bold text-white">Feliz Wine Bar</a>
+            <nav class="hidden md:flex space-x-8 items-center">
+                <a href="#about" class="text-gray-300 hover:text-white transition-colors" data-translate="about">О нас</a>
+                <a href="/menu" class="text-gray-300 hover:text-white transition-colors" data-translate="menu">Меню</a>
+                <a href="#gallery" class="text-gray-300 hover:text-white transition-colors" data-translate="gallery">Галерея</a>
+                <a href="#contact" class="text-gray-300 hover:text-white transition-colors" data-translate="contact">Контакты</a>
+                
+                <div class="flex space-x-2 ml-4">
+                    <span class="language-switcher active" data-lang="ru" onclick="setLanguage('ru')">RU</span>
+                    <span class="language-switcher" data-lang="ro" onclick="setLanguage('ro')">RO</span>
+                    <span class="language-switcher" data-lang="en" onclick="setLanguage('en')">EN</span>
+                </div>
+                
+                <button class="open-booking-modal hidden md:inline-block px-6 py-2 border border-accent-gold text-accent-gold rounded-full hover:bg-accent-gold hover:text-black transition-all duration-300" data-translate="reservation">
+                    Бронь стола
+                </button>
+            </nav>
+            <button id="mobile-menu-button" class="md:hidden text-white text-2xl">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-black bg-opacity-90">
+            <a href="#about" class="block text-center py-3 text-gray-300 hover:bg-gray-800" data-translate="about">О нас</a>
+            <a href="/menu" class="block text-center py-3 text-gray-300 hover:bg-gray-800" data-translate="menu">Меню</a>
+            <a href="#gallery" class="block text-center py-3 text-gray-300 hover:bg-gray-800" data-translate="gallery">Галерея</a>
+            <a href="#contact" class="block text-center py-3 text-gray-300 hover:bg-gray-800" data-translate="contact">Контакты</a>
+            
+            <div class="flex justify-center space-x-4 py-3">
+                <span class="language-switcher active" data-lang="ru" onclick="setLanguage('ru')">RU</span>
+                <span class="language-switcher" data-lang="ro" onclick="setLanguage('ro')">RO</span>
+                <span class="language-switcher" data-lang="en" onclick="setLanguage('en')">EN</span>
+            </div>
+            
+            <button class="open-booking-modal block w-full text-center py-4 my-2 mx-auto bg-accent-gold text-black rounded-full font-semibold" data-translate="reservation">
+                Бронь стола
+            </button>
+        </div>
+    </header>
+
+    <!-- === HERO SECTION === -->
+    <section class="hero-section flex items-center justify-center text-center">
+        <div id="hero-video-container">
+            <div class="hero-video-fallback"></div>
+            <video autoplay loop muted playsinline preload="auto" class="hidden md:block hero-video" id="desktop-video" src="{{ url_for('static', filename='videos/felyz.mp4') }}"></video>
+            <video autoplay loop muted playsinline preload="auto" class="block md:hidden hero-video" id="mobile-video" src="{{ url_for('static', filename='videos/felmob.mp4') }}"></video>
+        </div>
+        <div class="absolute inset-0 bg-black/60"></div>
+        <div class="relative z-10 max-w-3xl mx-auto px-4">
+            <h1 class="text-5xl md:text-7xl font-bold text-white leading-tight mb-4" data-translate="hero_title">Искусство вина и моря</h1>
+            <p class="text-lg md:text-xl text-gray-300 mb-8" data-translate="hero_subtitle">Откройте для себя идеальное сочетание изысканных вин и свежайших морепродуктов в сердце города.</p>
+            <a href="/menu" class="bg-accent-gold text-black font-bold py-3 px-10 rounded-full text-lg hover:bg-opacity-90 transform hover:scale-105 transition-all duration-300" data-translate="view_menu">
+                Посмотреть меню
+            </a>
+        </div>
+    </section>
+
+    <!-- === ABOUT SECTION === -->
+    <section id="about" class="py-20 md:py-32 bg-[#1a1a1a]">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="text-center md:text-left">
+                    <h2 class="text-4xl font-serif mb-6 text-white" data-translate="welcome_title">Добро пожаловать в Feliz</h2>
+                    <p class="mb-4 text-gray-400" data-translate="welcome_text1">
+                        Feliz Wine Bar — это не просто ресторан, это место, где страсть к вину встречается с любовью к дарам моря. Наша философия проста: мы используем только самые свежие ингредиенты, чтобы создать блюда, которые идеально дополняют нашу тщательно подобранную винную карту.
+                    </p>
+                    <p class="text-gray-400" data-translate="welcome_text2">
+                        Мы создали уютную и стильную атмосферу, где каждый гость может расслабиться и насладиться моментом. Ждем вас в гости, чтобы разделить с вами нашу любовь к вкусу.
+                    </p>
+                </div>
+                <div>
+                    <img src="/static/images/facade.jpg" alt="Фасад ресторана Feliz Wine Bar" class="rounded-lg shadow-2xl w-full h-auto object-cover" onerror="this.onerror=null;this.src='https://placehold.co/800x600/1a1a1a/e0e0e0?text=Feliz+Facade';">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- === GALLERY / MOMENTS SECTION === -->
+    <section id="gallery" class="py-20 md:py-32">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-4xl font-serif mb-4 text-white" data-translate="moments_title">Моменты в Feliz</h2>
+            <p class="max-w-2xl mx-auto text-gray-400 mb-12" data-translate="moments_subtitle">Загляните в нашу атмосферу: уютные вечера, счастливые улыбки и, конечно, великолепная еда.</p>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="grid gap-4">
+                    <div><img class="h-auto max-w-full rounded-lg transform hover:scale-105 transition-transform duration-300 cursor-pointer" src="/static/images/gallery-1.jpg" alt="Галерея 1" onerror="this.onerror=null;this.src='https://placehold.co/500x700/333/fff?text=Image+1';"></div>
+                    <div><img class="h-auto max-w-full rounded-lg transform hover:scale-105 transition-transform duration-300 cursor-pointer" src="/static/images/gallery-2.jpg" alt="Галерея 2" onerror="this.onerror=null;this.src='https://placehold.co/500x500/333/fff?text=Image+2';"></div>
+                </div>
+                <div class="grid gap-4">
+                    <div><img class="h-auto max-w-full rounded-lg transform hover:scale-105 transition-transform duration-300 cursor-pointer" src="/static/images/gallery-3.jpg" alt="Галерея 3" onerror="this.onerror=null;this.src='https://placehold.co/500x500/333/fff?text=Image+3';"></div>
+                    <div><img class="h-auto max-w-full rounded-lg transform hover:scale-105 transition-transform duration-300 cursor-pointer" src="/static/images/gallery-4.jpg" alt="Галерея 4" onerror="this.onerror=null;this.src='https://placehold.co/500x750/333/fff?text=Image+4';"></div>
+                </div>
+                <div class="grid gap-4">
+                    <div><img class="h-auto max-w-full rounded-lg transform hover:scale-105 transition-transform duration-300 cursor-pointer" src="/static/images/gallery-5.jpg" alt="Галерея 5" onerror="this.onerror=null;this.src='https://placehold.co/500x750/333/fff?text=Image+5';"></div>
+                    <div><img class="h-auto max-w-full rounded-lg transform hover:scale-105 transition-transform duration-300 cursor-pointer" src="/static/images/gallery-6.jpg" alt="Галерея 6" onerror="this.onerror=null;this.src='https://placehold.co/500x500/333/fff?text=Image+6';"></div>
+                </div>
+                <div class="grid gap-4">
+                    <div><img class="h-auto max-w-full rounded-lg transform hover:scale-105 transition-transform duration-300 cursor-pointer" src="/static/images/gallery-7.jpg" alt="Галерея 7" onerror="this.onerror=null;this.src='https://placehold.co/500x500/333/fff?text=Image+7';"></div>
+                    <div><img class="h-auto max-w-full rounded-lg transform hover:scale-105 transition-transform duration-300 cursor-pointer" src="/static/images/gallery-8.jpg" alt="Галерея 8" onerror="this.onerror=null;this.src='https://placehold.co/500x700/333/fff?text=Image+8';"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- === FOOTER === -->
+    <footer id="contact" class="bg-black py-16">
+        <div class="container mx-auto px-6 text-center text-gray-400">
+            <h3 class="text-3xl font-serif mb-8 text-white">Feliz Wine Bar</h3>
+            <div class="grid md:grid-cols-3 gap-8 mb-8">
+                <div>
+                    <h4 class="font-bold text-white mb-2" data-translate="address_title">Адрес</h4>
+                    <p data-translate="address">ул. Штефан чел Маре 123, Кишинев</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-white mb-2" data-translate="hours_title">Часы работы</h4>
+                    <p data-translate="hours">Пн - Вс: 12:00 - 23:00</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-white mb-2" data-translate="contacts_title">Контакты</h4>
+                    <p data-translate="phone">+373 123 456 78</p>
+                    <p data-translate="email">info@felizwinebar.com</p>
+                </div>
+            </div>
+            <div class="flex justify-center space-x-6 mb-8">
+                <a href="#" class="text-gray-400 hover:text-white text-2xl transition-colors"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="text-gray-400 hover:text-white text-2xl transition-colors"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="text-gray-400 hover:text-white text-2xl transition-colors"><i class="fab fa-telegram-plane"></i></a>
+            </div>
+            <p class="text-sm" data-translate="rights">&copy; 2025 Feliz Wine Bar. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Mobile Menu Toggle
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileMenuIcon = mobileMenuButton.querySelector('i');
+
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+                mobileMenuIcon.classList.toggle('fa-bars');
+                mobileMenuIcon.classList.toggle('fa-times');
+            });
+            
+            // Header Scroll Effect
+            let lastScrollTop = 0;
+            const header = document.querySelector('header');
+            window.addEventListener('scroll', function() {
+                let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                if (scrollTop > lastScrollTop && scrollTop > 100) {
+                    header.style.top = '-100px';
+                } else {
+                    header.style.top = '0';
+                }
+                lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+            });
+
+            // Booking Modal
+            const bookingModal = document.getElementById('booking-modal');
+            const openBookingButtons = document.querySelectorAll('.open-booking-modal');
+            const closeBookingModalButton = document.getElementById('close-booking-modal');
+
+            const openModal = () => bookingModal.classList.remove('hidden');
+            const closeModal = () => bookingModal.classList.add('hidden');
+
+            openBookingButtons.forEach(button => button.addEventListener('click', openModal));
+            closeBookingModalButton.addEventListener('click', closeModal);
+            bookingModal.addEventListener('click', (event) => {
+                if (event.target === bookingModal) closeModal();
+            });
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && !bookingModal.classList.contains('hidden')) closeModal();
+            });
+
+            // Video Resize Function
+            function resizeVideo() {
+                const videos = document.querySelectorAll('.hero-video');
+                const container = document.getElementById('hero-video-container');
+                const containerRatio = container.offsetWidth / container.offsetHeight;
+                
+                videos.forEach(video => {
+                    if (video.videoWidth && video.videoHeight) {
+                        const videoRatio = video.videoWidth / video.videoHeight;
+                        
+                        if (containerRatio > videoRatio) {
+                            video.style.width = '100%';
+                            video.style.height = 'auto';
+                        } else {
+                            video.style.width = 'auto';
+                            video.style.height = '100%';
+                        }
+                    }
+                });
+            }
+            
+            // Initialize Video
+            const videos = document.querySelectorAll('.hero-video');
+            videos.forEach(video => {
+                if (video.readyState >= 3) {
+                    resizeVideo();
+                } else {
+                    video.addEventListener('loadeddata', resizeVideo);
+                }
+            });
+            
+            window.addEventListener('resize', resizeVideo);
+        });
+    </script>
+
+</body>
+</html>

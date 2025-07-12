@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Панель администратора - Feliz Wine Bar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Montserrat', sans-serif; background-color: #111827; color: #f3f4f6; }
+        .modal.hidden { display: none; }
+        .status-Новый { background-color: #3b82f6; }
+        .status-Одобрен { background-color: #22c55e; }
+        .status-Отменен { background-color: #ef4444; }
+        .status-Доставлен { background-color: #6b7280; }
+        .category-badge {
+            display: inline-flex;
+            align-items: center;
+            background-color: #4b5563;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            margin: 4px;
+            font-size: 14px;
+            cursor: default;
+        }
+        .category-delete-btn {
+            margin-left: 8px;
+            background: none;
+            border: none;
+            color: #e5e7eb;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .category-delete-btn:hover {
+            color: #ef4444;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100">
+
+<header class="bg-gray-800 shadow-lg sticky top-0 z-30">
+    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+        <h1 class="text-2xl font-bold text-white">Панель Администратора</h1>
+        <div class="flex items-center space-x-6">
+            <a href="/" class="text-gray-300 hover:text-white font-semibold transition-colors"><i class="fa-solid fa-store mr-2"></i>На сайт</a>
+            <button onclick="logoutAdmin()" class="text-gray-300 hover:text-white font-semibold transition-colors"><i class="fa-solid fa-right-from-bracket mr-2"></i>Выйти</button>
+        </div>
+    </div>
+</header>
+
+<main class="p-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Левая колонка: Редактор меню -->
+        <div class="lg:col-span-2 space-y-6">
+            <div class="bg-gray-800 p-6 rounded-lg shadow-xl">
+                <h2 class="text-2xl font-bold mb-4 border-l-4 border-purple-500 pl-3">Редактор меню</h2>
+                <h3 class="text-xl font-semibold mb-4 text-gray-300">Добавить новое блюдо</h3>
+                <form id="add-item-form" class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <input name="name" type="text" placeholder="Название блюда" class="bg-gray-700 p-2 rounded w-full" required>
+                        <input name="description" type="text" placeholder="Описание" class="bg-gray-700 p-2 rounded w-full">
+                        <input name="price" type="number" step="0.01" placeholder="Цена (MDL)" class="bg-gray-700 p-2 rounded w-full" required>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <select name="category" class="bg-gray-700 p-2 rounded w-full">
+                            <option value="" disabled selected>Выберите категорию</option>
+                            {% for category in categories %}<option value="{{ category }}">{{ category }}</option>{% endfor %}
+                        </select>
+                        <input name="new_category" type="text" placeholder="Или новая категория" class="bg-gray-700 p-2 rounded w-full">
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input name="image_url" type="text" placeholder="URL изображения" class="bg-gray-700 p-2 rounded w-full">
+                        <div>
+                            <label for="add-is-food" class="text-sm text-gray-400">Тип новой категории</label>
+                            <select name="is_food" id="add-is-food" class="bg-gray-700 p-2 rounded w-full mt-1">
+                                <option value="1">Еда</option>
+                                <option value="0">Напитки</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded transition-colors">
+                        Добавить в меню
+                    </button>
+                </form>
+            </div>
+
+            <div class="bg-gray-800 p-6 rounded-lg shadow-xl">
+                <h3 class="text-xl font-semibold mb-4 text-gray-300">Управление категориями</h3>
+                <div class="flex flex-wrap">
+                    {% for category in categories %}
+                    <span class="category-badge">
+                        {{ category }}
+                        <button onclick="deleteCategory('{{ category }}')" class="category-delete-btn" title="Удалить категорию">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </span>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="bg-gray-800 rounded-lg shadow-xl overflow-x-auto">
+                 <h3 class="text-xl font-semibold text-gray-300 p-6">Список блюд</h3>
+                <table class="min-w-full text-sm">
+                    <thead class="bg-gray-700">
+                        <tr class="text-left">
+                            <th class="p-3">Название</th><th class="p-3">Категория</th><th class="p-3">Цена</th><th class="p-3 text-center">Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-700">
+                        {% for item in menu_items %}
+                        <tr>
+                            <td class="p-3 font-semibold">{{ item.name }}<p class="font-normal text-gray-400 text-xs">{{ item.description }}</p></td>
+                            <td class="p-3">{{ item.category }}</td>
+                            <td class="p-3">{{ item.price }} MDL</td>
+                            <td class="p-3 text-center">
+                                <div class="flex justify-center items-center space-x-4">
+                                    <button onclick='openEditModal({{ item | tojson | safe }})' class="text-blue-400 hover:text-blue-300 transition-colors"><i class="fa-solid fa-pen-to-square"></i></button>
+                                    <button onclick="deleteMenuItem({{ item.id }})" class="text-red-500 hover:text-red-400 transition-colors"><i class="fa-solid fa-trash"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="4" class="p-4 text-center text-gray-500">В меню пока нет товаров.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Правая колонка: Заказы -->
+        <div class="lg:col-span-1">
+            <div class="bg-gray-800 p-6 rounded-lg shadow-xl">
+                <h2 class="text-2xl font-bold mb-4 border-l-4 border-yellow-500 pl-3">Заказы на доставку</h2>
+                <div class="space-y-4">
+                    {% for order in orders %}
+                    <div class="bg-gray-700 p-4 rounded-lg flex flex-col">
+                        <div class="flex justify-between items-center border-b border-gray-600 pb-2 mb-3">
+                            <span class="font-bold text-lg">Заказ #{{ order.id }}</span>
+                            <span class="px-2 py-1 text-xs font-bold rounded-full status-{{ order.status }}">{{ order.status }}</span>
+                        </div>
+                        <div class="flex-grow text-sm text-gray-300 space-y-1">
+                            <p><strong>Имя:</strong> {{ order.customer_name }}</p>
+                            <p><strong>Телефон:</strong> {{ order.customer_phone }}</p>
+                            <p><strong>Адрес:</strong> {{ order.customer_address }}</p>
+                            <div class="mt-2 border-t border-gray-600 pt-2">
+                                <p class="font-semibold mb-1">Состав:</p>
+                                <ul class="list-disc list-inside text-xs">
+                                    {% for item in order.order_details %}<li>{{ item.name }} x {{ item.quantity }}</li>{% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                        <p class="mt-3 font-bold text-right text-lg text-yellow-400">Итого: {{ order.total_price }} MDL</p>
+                        <div class="mt-3 flex justify-end space-x-2">
+                             {% if order.status == 'Новый' %}
+                                <button onclick="updateStatus({{ order.id }}, 'Одобрен')" class="bg-green-600 hover:bg-green-700 text-white py-1 px-2 rounded text-sm transition-colors" title="Одобрить"><i class="fa-solid fa-check"></i></button>
+                                <button onclick="updateStatus({{ order.id }}, 'Отменен')" class="bg-red-600 hover:bg-red-700 text-white py-1 px-2 rounded text-sm transition-colors" title="Отменить"><i class="fa-solid fa-times"></i></button>
+                            {% elif order.status == 'Одобрен' %}
+                                <button onclick="updateStatus({{ order.id }}, 'Доставлен')" class="bg-blue-600 hover:bg-blue-700 text-white py-1 px-2 rounded text-sm transition-colors" title="Доставлен"><i class="fa-solid fa-truck"></i></button>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% else %}<p class="text-center text-gray-500 py-8">Активных заказов нет.</p>{% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Модальное окно для редактирования блюда -->
+<div id="edit-modal" class="modal fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden">
+    <div class="bg-gray-800 p-8 rounded-lg shadow-xl w-full max-w-2xl">
+        <h2 class="text-2xl font-bold mb-6">Редактировать позицию</h2>
+        <form id="edit-form" class="space-y-4">
+            <input type="hidden" id="edit-id" name="id">
+             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <input id="edit-name" name="name" type="text" placeholder="Название блюда" class="bg-gray-700 p-2 rounded w-full" required>
+                <input id="edit-description" name="description" type="text" placeholder="Описание" class="bg-gray-700 p-2 rounded w-full">
+                <input id="edit-price" name="price" type="number" step="0.01" placeholder="Цена (MDL)" class="bg-gray-700 p-2 rounded w-full" required>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                 <select id="edit-category" name="category" class="bg-gray-700 p-2 rounded w-full">
+                    {% for category in categories %}<option value="{{ category }}">{{ category }}</option>{% endfor %}
+                </select>
+                <input id="edit-new-category" name="new_category" type="text" placeholder="Или новая категория" class="bg-gray-700 p-2 rounded w-full">
+            </div>
+             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input id="edit-image_url" name="image_url" type="text" placeholder="URL изображения" class="bg-gray-700 p-2 rounded w-full">
+                 <div>
+                    <label for="edit-is-food" class="text-sm text-gray-400">Тип категории</label>
+                    <select id="edit-is-food" name="is_food" class="bg-gray-700 p-2 rounded w-full mt-1">
+                        <option value="1">Еда</option>
+                        <option value="0">Напитки</option>
+                    </select>
+                </div>
+            </div>
+            <div class="mt-6 flex justify-end space-x-4">
+                <button type="button" onclick="closeEditModal()" class="bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded transition-colors">Отмена</button>
+                <button type="submit" class="bg-green-600 hover:bg-green-500 text-white font-bold py-2 px-4 rounded transition-colors">Сохранить</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    async function sendRequest(url, method, body = null) {
+        try {
+            const options = {
+                method: method,
+                headers: { 'Content-Type': 'application/json' },
+            };
+            if (body) options.body = JSON.stringify(body);
+            const response = await fetch(url, options);
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.message || 'Ошибка сервера');
+            return result;
+        } catch (error) {
+            console.error(`Ошибка запроса к ${url}:`, error);
+            alert(`Ошибка: ${error.message}`);
+            return null;
+        }
+    }
+
+    async function updateStatus(orderId, newStatus) {
+        const result = await sendRequest(`/admin/update_status/${orderId}`, 'POST', { status: newStatus });
+        if (result && result.success) window.location.reload();
+    }
+
+    async function deleteMenuItem(itemId) {
+        if (confirm('Вы уверены, что хотите удалить этот товар?')) {
+            const result = await sendRequest(`/admin/delete_menu_item/${itemId}`, 'POST');
+            if (result && result.success) window.location.reload();
+        }
+    }
+
+    async function deleteCategory(categoryName) {
+        if (confirm(`Удалить категорию "${categoryName}"? Все товары в ней будут удалены.`)) {
+            const result = await sendRequest('/admin/delete_category', 'POST', { category: categoryName });
+            if (result && result.success) window.location.reload();
+        }
+    }
+
+    async function logoutAdmin() {
+        await sendRequest('/api/logout', 'POST');
+        window.location.href = '/';
+    }
+
+    const editModal = document.getElementById('edit-modal');
+    function openEditModal(item) {
+        document.getElementById('edit-id').value = item.id;
+        document.getElementById('edit-name').value = item.name;
+        document.getElementById('edit-description').value = item.description || '';
+        document.getElementById('edit-price').value = item.price;
+        document.getElementById('edit-category').value = item.category;
+        document.getElementById('edit-image_url').value = item.image_url || '';
+        document.getElementById('edit-new-category').value = '';
+        document.getElementById('edit-is-food').value = item.is_food;
+        editModal.classList.remove('hidden');
+    }
+
+    function closeEditModal() {
+        editModal.classList.add('hidden');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const addItemForm = document.getElementById('add-item-form');
+        const editItemForm = document.getElementById('edit-form');
+
+        addItemForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = Object.fromEntries(new FormData(addItemForm).entries());
+            if (!data.category && !data.new_category) {
+                alert('Выберите существующую категорию или введите новую.');
+                return;
+            }
+            const result = await sendRequest('/admin/add_menu_item', 'POST', data);
+            if (result && result.success) {
+                addItemForm.reset();
+                window.location.reload();
+            }
+        });
+
+        editItemForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = Object.fromEntries(new FormData(editItemForm).entries());
+            const itemId = data.id;
+            if (!data.category && !data.new_category) {
+                alert('Выберите существующую категорию или введите новую.');
+                return;
+            }
+            const result = await sendRequest(`/admin/edit_menu_item/${itemId}`, 'POST', data);
+            if (result && result.success) {
+                closeEditModal();
+                window.location.reload();
+            }
+        });
+    });
+</script>
+</body>
+</html>

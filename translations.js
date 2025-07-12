@@ -3,6 +3,9 @@ const translations = {
   ru: {
     // Общие элементы
     "reservation": "Бронь стола",
+    "booking_title": "Бронь стола",
+    "booking_text": "Бронь стола возможна по номеру телефона:",
+    "booking_note": "(Пожалуйста, свяжитесь с нами для уточнения деталей)",
     "menu": "Меню",
     "about": "О нас",
     "gallery": "Галерея",
@@ -10,38 +13,83 @@ const translations = {
     "phone": "+373 123 456 78",
     "hours": "Пн - Вс: 12:00 - 23:00",
     "rights": "Все права защищены.",
-    "address": "ул. Штефан чел Маре 123, Кишинев",
-    "email": "info@felizwinebar.com",
+    
+    // Категории еды
+    "breakfast": "Завтрак",
+    "soups": "Супы",
+    "appetizers": "Закуски",
+    "salads": "Салаты",
+    "seafood": "Морепродукты и рыба",
+    "pasta": "Паста",
+    "meat": "Мясные блюда",
+    "burgers": "Бургеры и другое",
+    "desserts": "Десерты",
+    
+    // Категории напитков
+    "coffee": "Кофе",
+    "tea": "Чай",
+    "juices": "Соки и вода",
+    "beer": "Пиво и закуски",
+    "non_alco": "Безалкогольные коктейли",
+    "alco": "Алкогольные коктейли",
+    "whisky": "Виски",
+    "cognac": "Коньяк",
+    "sparkling": "Игристые",
+    "white_wine": "Белые вина",
+    "red_wine": "Красные вина",
+    "rose_wine": "Розовые вина",
     
     // Главная страница
     "hero_title": "Искусство вина и моря",
     "hero_subtitle": "Откройте для себя идеальное сочетание изысканных вин и свежайших морепродуктов в сердце города.",
     "view_menu": "Посмотреть меню",
     "welcome_title": "Добро пожаловать в Feliz",
-    "welcome_text1": "Feliz Wine Bar — это не просто ресторан, это место, где страсть к вину встречается с любовью к дарам моря. Наша философия проста: мы используем только самые свежие ингредиенты, чтобы создать блюда, которые идеально дополняют нашу тщательно подобранную винную карту.",
-    "welcome_text2": "Мы создали уютную и стильную атмосферу, где каждый гость может расслабиться и насладиться моментом. Ждем вас в гости, чтобы разделить с вами нашу любовь к вкусу.",
-    "moments_title": "Моменты в Feliz",
-    "moments_subtitle": "Загляните в нашу атмосферу: уютные вечера, счастливые улыбки и, конечно, великолепная еда.",
-    "address_title": "Адрес",
-    "hours_title": "Часы работы",
-    "contacts_title": "Контакты",
+    "welcome_text1": "Feliz Wine Bar — это не просто ресторан, это место, где страсть к вину встречается с любовью к дарам моря.",
+    "welcome_text2": "Мы создали уютную и стильную атмосферу, где каждый гость может расслабиться и насладиться моментом.",
     
-    // Бронирование
-    "booking_title": "Бронь стола",
-    "booking_text": "Бронь стола возможна по номеру телефона:",
-    "booking_note": "(Пожалуйста, свяжитесь с нами для уточнения деталей)",
+    // Меню
+    "menu_title": "Наше меню",
+    "menu_subtitle": "Лучшие вина и авторская кухня",
+    "food_btn": "Еда",
+    "drinks_btn": "Напитки",
+    "empty_menu": "Нет доступных блюд в этой категории",
+    "add_to_cart": "В корзину",
+    "loading_menu": "Загрузка меню...",
     
-    // Меню пользователя
-    "profile": "Профиль",
-    "logout": "Выйти",
-    "login": "Войти",
-    "register": "Регистрация",
-    "admin_panel": "Админ-панель",
-    "cart": "Корзина"
+    // Корзина
+    "cart_title": "Корзина",
+    "empty_cart": "Ваша корзина пуста",
+    "cart_total": "Итого:",
+    "checkout_btn": "Оформить заказ",
+    "item_added": "добавлен в корзину",
+    "item_removed": "Товар удален из корзины",
+    "order_placed": "Ваш заказ принят! С вами свяжется оператор.",
+    
+    // Форма заказа
+    "checkout_title": "Оформление заказа",
+    "name_placeholder": "Ваше имя",
+    "phone_placeholder": "Контактный телефон",
+    "address_placeholder": "Адрес доставки",
+    "confirm_order": "Подтвердить заказ",
+    
+    // Авторизация
+    "login_title": "Вход",
+    "register_title": "Регистрация",
+    "email_placeholder": "Email",
+    "password_placeholder": "Пароль",
+    "login_btn": "Войти",
+    "register_btn": "Зарегистрироваться",
+    "no_account": "Нет аккаунта?",
+    "have_account": "Уже есть аккаунт?",
+    "switch_to_register": "Регистрация",
+    "switch_to_login": "Войти"
   },
   ro: {
     // Общие элементы
     "reservation": "Rezervare masă",
+    "booking_title": "Rezervare masă",
+    "booking_text": "Rezervarea mesei este posibilă la numărul de telefon:",
+    "booking_note": "(Vă rugăm să ne contactați pentru detalii)",
     "menu": "Meniu",
     "about": "Despre noi",
     "gallery": "Galerie",
@@ -49,35 +97,40 @@ const translations = {
     "phone": "+373 123 456 78",
     "hours": "Lun - Dum: 12:00 - 23:00",
     "rights": "Toate drepturile rezervate.",
-    "address": "str. Ștefan cel Mare 123, Chișinău",
-    "email": "info@felizwinebar.com",
+    
+    // Категории еды
+    "breakfast": "Mic dejun",
+    "soups": "Ciorbe",
+    "appetizers": "Aperitive",
+    "salads": "Salate",
+    "seafood": "Fructe de mare și pește",
+    "pasta": "Paste",
+    "meat": "Preparate din carne",
+    "burgers": "Burgeri și altele",
+    "desserts": "Deserturi",
+    
+    // Категории напитков
+    "coffee": "Cafea",
+    "tea": "Ceai",
+    "juices": "Sucuri și apă",
+    "beer": "Bere și gustări",
+    "non_alco": "Cocktail-uri nealcoolice",
+    "alco": "Cocktail-uri alcoolice",
+    "whisky": "Whisky",
+    "cognac": "Divin",
+    "sparkling": "Spumoase",
+    "white_wine": "Vinuri albe",
+    "red_wine": "Vinuri roșii",
+    "rose_wine": "Vinuri rose",
     
     // Главная страница
     "hero_title": "Arta vinului și a mării",
-    "hero_subtitle": "Descoperiți combinația perfectă între vinuri rafinate și fructe de mare proaspete în inima orașului.",
+    "hero_subtitle": "Descoperiți combinația perfectă între vinuri rafinate și fructe de mare proaspete.",
     "view_menu": "Vezi meniul",
     "welcome_title": "Bun venit la Feliz",
-    "welcome_text1": "Feliz Wine Bar nu este doar un restaurant, este un loc unde pasiunea pentru vin se întâlnește cu dragostea pentru darurile mării. Filosofia noastră este simplă: folosim doar cele mai proaspete ingrediente pentru a crea preparate care completează perfect colecția noastră de vinuri.",
-    "welcome_text2": "Am creat o atmosferă plăcută și elegantă, unde fiecare oaspete se poate relaxa și bucura de moment. Vă așteptăm să împărtășim împreună dragostea pentru gust.",
-    "moments_title": "Momente la Feliz",
-    "moments_subtitle": "Aruncați o privire în atmosfera noastră: seri plăcute, zâmbete fericite și, desigur, mâncare minunată.",
-    "address_title": "Adresă",
-    "hours_title": "Program",
-    "contacts_title": "Contacte",
+    "welcome_text1": "Feliz Wine Bar nu este doar un restaurant, este un loc unde pasiunea pentru vin se întâlnește cu dragostea pentru darurile mării.",
+    "welcome_text2": "Am creat o atmosferă plăcută și elegantă, unde fiecare oaspete se poate relaxa și bucura de moment.",
     
-    // Бронирование
-    "booking_title": "Rezervare masă",
-    "booking_text": "Rezervarea mesei este posibilă la numărul de telefon:",
-    "booking_note": "(Vă rugăm să ne contactați pentru detalii)",
-    
-    // Меню пользователя
-    "profile": "Profil",
-    "logout": "Deconectare",
-    "login": "Autentificare",
-    "register": "Înregistrare",
-    "admin_panel": "Panou admin",
-    "cart": "Coș"
-
     // Меню
     "menu_title": "Meniu nostru",
     "menu_subtitle": "Cele mai bune vinuri și bucătărie autor",
@@ -114,11 +167,13 @@ const translations = {
     "have_account": "Ai deja cont?",
     "switch_to_register": "Înregistrare",
     "switch_to_login": "Autentificare"
-    
   },
   en: {
     // Общие элементы
     "reservation": "Book a table",
+    "booking_title": "Table reservation",
+    "booking_text": "Table reservation is available by phone:",
+    "booking_note": "(Please contact us for details)",
     "menu": "Menu",
     "about": "About us",
     "gallery": "Gallery",
@@ -126,35 +181,40 @@ const translations = {
     "phone": "+373 123 456 78",
     "hours": "Mon - Sun: 12:00 - 23:00",
     "rights": "All rights reserved.",
-    "address": "Stefan cel Mare str. 123, Chisinau",
-    "email": "info@felizwinebar.com",
+    
+    // Food categories
+    "breakfast": "Breakfast",
+    "soups": "Soups",
+    "appetizers": "Appetizers",
+    "salads": "Salads",
+    "seafood": "Seafood and fish",
+    "pasta": "Pasta",
+    "meat": "Meat dishes",
+    "burgers": "Burgers & more",
+    "desserts": "Desserts",
+    
+    // Drink categories
+    "coffee": "Coffee",
+    "tea": "Tea",
+    "juices": "Juices & water",
+    "beer": "Beer & snacks",
+    "non_alco": "Non-alcoholic cocktails",
+    "alco": "Alcoholic cocktails",
+    "whisky": "Whisky",
+    "cognac": "Cognac",
+    "sparkling": "Sparkling",
+    "white_wine": "White wines",
+    "red_wine": "Red wines",
+    "rose_wine": "Rosé wines",
     
     // Главная страница
     "hero_title": "The Art of Wine and Sea",
-    "hero_subtitle": "Discover the perfect combination of exquisite wines and freshest seafood in the heart of the city.",
+    "hero_subtitle": "Discover the perfect combination of exquisite wines and freshest seafood.",
     "view_menu": "View menu",
     "welcome_title": "Welcome to Feliz",
-    "welcome_text1": "Feliz Wine Bar is not just a restaurant, it's a place where passion for wine meets love for the gifts of the sea. Our philosophy is simple: we use only the freshest ingredients to create dishes that perfectly complement our carefully selected wine list.",
-    "welcome_text2": "We've created a cozy and stylish atmosphere where every guest can relax and enjoy the moment. We look forward to welcoming you to share our love of taste.",
-    "moments_title": "Moments at Feliz",
-    "moments_subtitle": "Take a look at our atmosphere: cozy evenings, happy smiles and, of course, wonderful food.",
-    "address_title": "Address",
-    "hours_title": "Working hours",
-    "contacts_title": "Contacts",
+    "welcome_text1": "Feliz Wine Bar is not just a restaurant, it's a place where passion for wine meets love for the gifts of the sea.",
+    "welcome_text2": "We've created a cozy and stylish atmosphere where every guest can relax and enjoy the moment.",
     
-    // Бронирование
-    "booking_title": "Table reservation",
-    "booking_text": "Table reservation is available by phone:",
-    "booking_note": "(Please contact us for details)",
-    
-    // Меню пользователя
-    "profile": "Profile",
-    "logout": "Logout",
-    "login": "Login",
-    "register": "Register",
-    "admin_panel": "Admin panel",
-    "cart": "Cart"
-
     // Меню
     "menu_title": "Our Menu",
     "menu_subtitle": "Best wines and author's cuisine",
@@ -191,7 +251,6 @@ const translations = {
     "have_account": "Already have an account?",
     "switch_to_register": "Register",
     "switch_to_login": "Login"
-
   }
 };
 
